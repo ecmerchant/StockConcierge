@@ -139,6 +139,7 @@ class MaterialsController < ApplicationController
   end
 
   def template
+    user = current_user.email
     respond_to do |format|
       format.html
       format.xlsx do
@@ -149,6 +150,26 @@ class MaterialsController < ApplicationController
 
         headers.each_with_index do |(key, value), index|
           @sheet.add_cell(0, index, value)
+        end
+
+        categories = Category.where(user: user)
+        suppliers = Supplier.where(user: user)
+
+        @sheet.add_cell(0, 12,"カテゴリー")
+        @sheet.add_cell(0, 13,"カテゴリー名")
+
+        categories.each_with_index do |cat, index|
+          @sheet.add_cell(1 + index, 12, cat.category_id)
+          @sheet.add_cell(1 + index, 13, cat.name)
+        end
+
+
+        @sheet.add_cell(0, 15,"仕入れ先")
+        @sheet.add_cell(0, 16,"仕入れ先名")
+
+        suppliers.each_with_index do |sup, index|
+          @sheet.add_cell(1 + index, 15, sup.supplier_id)
+          @sheet.add_cell(1 + index, 16, sup.name)
         end
 
         data = @workbook.stream.read

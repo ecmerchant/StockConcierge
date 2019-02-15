@@ -48,9 +48,9 @@
                 <td><a href="/material_stocks/edit/<%= temp.material_id %>" target="_blank">在庫</a></td>
                 <% @headers.each do |key, value| %>
                 <% if value == "カテゴリー" then %>
-                <td><%= temp.category.name %></td>
+                <td><%= if temp.category != nil then temp.category.name else nil end %></td>
                 <% elsif value == "仕入れ先名" then %>
-                <td><%= temp.supplier.name %></td>
+                <td><%= if temp.supplier != nil then temp.supplier.name else nil end %></td>
                 <% else %>
                 <td><%= temp[key] %></td>
                 <% end %>
