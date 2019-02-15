@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: MyString
+  product_id: MyString
+  action: MyString
+  input_qty: 1
+  self_qty: 1
+  fba_qty: 1
+  total_qty: 1
+  arriving_qty: 1
+
+two:
+  user: MyString
+  product_id: MyString
+  action: MyString
+  input_qty: 1
+  self_qty: 1
+  fba_qty: 1
+  total_qty: 1
+  arriving_qty: 1

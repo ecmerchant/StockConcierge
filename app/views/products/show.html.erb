@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="page-header" id="banner">
+    <div class="row my-4">
+      <div class="col-12">
+        <h3>商品データの管理</h3>
+        <br>
+        <h5>登録済み商品件数　全<%= @products.count.to_i %>件</h5>
+        <table class="table table-striped table-hover table-bordered ellipsis" id="product_table">
+          <thead class="thead-light">
+            <tr>
+              <% @headers.each do |key, value| %>
+              <th><%= value %></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% @products.each do |temp| %>
+            <% product_id = temp.product_id %>
+            <tr>
+              <td><%= temp.product_id %></td>
+              <td><%= truncate(temp.name) %></td>
+              <td><a href="/recipes/edit/<%= temp.product_id %>" target="_blank">レシピ</a></td>
+              <td><a href="/product_stocks/edit/<%= temp.product_id %>" target="_blank">在庫</a></td>
+              <td><a href="/reports/edit/<%= temp.product_id %>" target="_blank">売れ行き</a></td>
+              <% buf = @stocks.where(product_id: product_id).order("created_at DESC NULLS LAST").first %>
+              <td><%= if buf != nil then buf.fba_qty.to_i else 0 end %></td>
+              <td><%= if buf != nil then buf.self_qty.to_i else 0 end %></td>
+              <td><%= if buf != nil then buf.arriving_qty.to_i else 0 end %></td>
+              <td><%= temp.price %></td>
+              <% buf = @recipes.where(product_id: product_id) %>
+              <% cost = 0 %>
+              <td><%= temp.cost %></td>
+              <td><%= temp.profit %></td>
+              <% ts = @reports.where(product_id: product_id).order("recorded_at DESC NULLS LAST").first %>
+              <% if ts != nil then ts = ts.recorded_at else ts = Time.current end %>
+              <% buf = @reports.where(product_id: product_id).where("recorded_at > ?", ts.ago(14.days)) %>
+              <td><%= buf.average(:order_quantity) %></td>
+              <td><%= buf.average(:cost) %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#download_template').on('click', function() {
+      setTimeout(function(){
+          location.href = '/products/show';
+      },1000);
+    });
+  });
+</script>

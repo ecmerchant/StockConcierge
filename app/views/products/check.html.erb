@@ -1,0 +1,90 @@
+<div class="container">
+  <div class="page-header" id="banner">
+    <div class="row my-4">
+      <div class="col-12">
+        <h3>商品作成に必要な素材数量の確認</h3>
+        <div class="form-inline">
+        <%= form_tag('/products/check', method:'post', multipart: true, id:'product_check_import') do %>
+          <div class="form-inline">
+            <%= link_to 'テンプレート取得', {:controller => 'products', :action => 'check_template', :format => 'xlsx'}, {class: 'btn btn-success', id: 'download_template', style: 'margin-right: 20px;'} %>
+            <label style="vertical-align:middle;">
+            <span class="btn btn-info" style="width:180px;">
+              確認用ファイル登録
+              <input type="file" name="product_check_data" onChange="$('#product_check_import').submit();" style="display:none;">
+            </span>
+            </label>
+          </div>
+        <% end %>
+        <%= form_tag('/products/check_output', method:'post') do %>
+          <div class="form-inline">
+            <%= hidden_field_tag "data", @calc_materials.to_json %>
+            <%= hidden_field_tag "data_product", @calc_products.to_json %>
+            <%= submit_tag('発注予定リスト作成', class: 'btn btn-warning', id: 'check_output', style: 'margin-left: 20px;') %>
+          </div>
+        <% end %>
+
+        </div>
+        <br>
+        </div>
+        <div class="col-4">
+          <h5>確認したい商品</h5>
+          <table class="table table-striped table-hover table-bordered ellipsis" id="product_table">
+            <thead class="thead-light">
+              <tr>
+                <% @headers1.each do |key, value| %>
+                <th style="text-align: center;"><%= value %></th>
+                <% end %>
+              </tr>
+            </thead>
+            <tbody>
+              <% if @calc_products != nil then %>
+              <% @calc_products.each do |temp| %>
+              <% if temp[:check_quantity].to_i > 0 then %>
+              <tr>
+                <% @headers1.each do |key, value| %>
+                <td style="text-align: center;"><%= temp[key] %></td>
+                <% end %>
+              </tr>
+              <% end %>
+              <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-7">
+          <h5>必要な素材一覧</h5>
+          <table class="table table-striped table-hover table-bordered ellipsis" id="product_table">
+            <thead class="thead-light">
+              <tr>
+                <% @headers2.each do |key, value| %>
+                <th style="text-align: center;"><%= value %></th>
+                <% end %>
+              </tr>
+            </thead>
+            <tbody>
+              <% if @calc_materials != nil then %>
+              <% @calc_materials.each do |temp| %>
+              <tr>
+                <% @headers2.each do |key, value| %>
+                <td style="text-align: center;"><%= temp[key] %></td>
+                <% end %>
+              </tr>
+              <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#check_output').on('click', function() {
+      setTimeout(function(){
+          //location.href = '/products/check';
+      },1000);
+    });
+  });
+</script>

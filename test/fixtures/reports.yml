@@ -1,0 +1,45 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: MyString
+  product_id: MyString
+  impression: 9.99
+  click: 9.99
+  click_through_rate: 9.99
+  click_per_cost: 9.99
+  cost: 9.99
+  total_sale: 9.99
+  adv_cost_of_sale: 9.99
+  return_on_adv_spend: 9.99
+  session: 9.99
+  session_rate: 9.99
+  page_view: 9.99
+  page_view_rate: 9.99
+  cart_box_rate: 9.99
+  order_quantity: 9.99
+  unit_session_rate: 9.99
+  sale: 9.99
+  total: 9.99
+  recorded_at: 2019-02-07
+
+two:
+  user: MyString
+  product_id: MyString
+  impression: 9.99
+  click: 9.99
+  click_through_rate: 9.99
+  click_per_cost: 9.99
+  cost: 9.99
+  total_sale: 9.99
+  adv_cost_of_sale: 9.99
+  return_on_adv_spend: 9.99
+  session: 9.99
+  session_rate: 9.99
+  page_view: 9.99
+  page_view_rate: 9.99
+  cart_box_rate: 9.99
+  order_quantity: 9.99
+  unit_session_rate: 9.99
+  sale: 9.99
+  total: 9.99
+  recorded_at: 2019-02-07

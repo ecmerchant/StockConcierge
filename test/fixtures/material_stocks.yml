@@ -1,0 +1,43 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: MyString
+  material_id: MyString
+  action: MyString
+  input_case: 1
+  input_package: 1
+  input_qty: 1
+  current_case: 1
+  current_package: 1
+  current_qty: 1
+  current_total: 1
+  arriving_case: 1
+  arriving_package: 1
+  arriving_qty: 1
+  arriving_total: 1
+  shipping_case: 1
+  shipping_package: 1
+  shipping_qty: 1
+  shipping_total: 1
+  expire: 2019-02-07
+
+two:
+  user: MyString
+  material_id: MyString
+  action: MyString
+  input_case: 1
+  input_package: 1
+  input_qty: 1
+  current_case: 1
+  current_package: 1
+  current_qty: 1
+  current_total: 1
+  arriving_case: 1
+  arriving_package: 1
+  arriving_qty: 1
+  arriving_total: 1
+  shipping_case: 1
+  shipping_package: 1
+  shipping_qty: 1
+  shipping_total: 1
+  expire: 2019-02-07

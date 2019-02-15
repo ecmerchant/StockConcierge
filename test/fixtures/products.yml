@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: MyString
+  product_id: MyString
+  name: MyText
+  price: 9.99
+  fee: 9.99
+  expense: 9.99
+  cost: 9.99
+  profit: 9.99
+  seller_id: MyString
+  fba_sku: MyString
+  self_sku: MyString
+
+two:
+  user: MyString
+  product_id: MyString
+  name: MyText
+  price: 9.99
+  fee: 9.99
+  expense: 9.99
+  cost: 9.99
+  profit: 9.99
+  seller_id: MyString
+  fba_sku: MyString
+  self_sku: MyString

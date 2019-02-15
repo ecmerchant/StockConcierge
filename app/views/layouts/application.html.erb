@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>在庫管理ツール</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= favicon_link_tag() %>
+
+    <style type="text/css">
+    .bs-component + .bs-component {
+      margin-top: 1rem;
+    }
+    @media (min-width: 768px) {
+      .bs-docs-section {
+        margin-top: 8em;
+      }
+      .bs-component {
+        position: relative;
+      }
+      .bs-component .modal {
+        position: relative;
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+        z-index: 1;
+        display: block;
+      }
+      .bs-component .modal-dialog {
+        width: 90%;
+      }
+      .bs-component .popover {
+        position: relative;
+        display: inline-block;
+        width: 220px;
+        margin: 20px;
+      }
+      .nav-tabs {
+        margin-bottom: 15px;
+      }
+      .progress {
+        margin-bottom: 10px;
+      }
+
+      table {
+        font-size: 11pt;
+        width: 100%;
+        height: 350px;
+        display: block;
+        overflow-x: scroll;
+        white-space: nowrap;
+      }
+
+    }
+    </style>
+  </head>
+
+  <body>
+    <% if @login_user != nil then %>
+    <header class="sticky-top">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand" href="http://www.ec-merchant.com" target="_blank">
+            <%= image_tag("ecmerchant_small.png", :height => '50px') %>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbar">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/products/show">メイン <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  各種マスタ
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/products/edit">商品マスタ</a>
+                  <a class="dropdown-item" href="/materials/edit">素材マスタ</a>
+                  <a class="dropdown-item" href="/recipes/edit">レシピマスタ</a>
+                  <a class="dropdown-item" href="/categories/edit">素材カテゴリーマスタ</a>
+                  <a class="dropdown-item" href="/sellers/edit">販売店舗マスタ</a>
+                  <a class="dropdown-item" href="/suppliers/edit">仕入れ先マスタ</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  在庫管理
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/material_stocks/edit">素材在庫管理</a>
+                  <a class="dropdown-item" href="/product_stocks/edit">商品在庫管理</a>
+                </div>
+              </li>
+              <li class="nav-item">
+                <%= link_to "レポート登録", {:controller => "reports", :action => "edit"}, {:class => 'nav-link'} %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "数量確認", {:controller => "products", :action => "check"}, {:class => 'nav-link'} %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "データ削除", {:controller => "products", :action => "destroy"}, {:class => 'nav-link'} %>
+              </li>
+              <li class="nav-item">
+                <a href="/users/sign_out" class="nav-link">ログアウト</a>
+              </li>
+              <% if @login_user != nil then %>
+              <% if @login_user.admin_flg == true then %>
+              <li class="nav-item">
+                <a href="/admin" class="nav-link">Administer</a>
+              </li>
+              <% end %>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <% end %>
+    <%= yield %>
+    <script type="text/javascript">
+      $('.bs-component [data-toggle="popover"]').popover();
+      $('.bs-component [data-toggle="tooltip"]').tooltip();
+    </script>
+  </body>
+</html>

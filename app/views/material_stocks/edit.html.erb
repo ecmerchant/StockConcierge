@@ -1,0 +1,79 @@
+<div class="container">
+  <div class="page-header" id="banner">
+    <div class="row my-4">
+      <div class="col-12">
+        <h3>素材在庫の管理</h3>
+        <div class="form-inline">
+        <%= form_tag('/material_stocks/edit', method:'post', multipart: true, id:'materials_input_update') do %>
+          <div class="form-inline">
+            <%= link_to '入出庫テンプレ', {:controller => 'material_stocks', :action => 'template', :format => 'xlsx', code: @target_code}, {class: 'btn btn-success', id: 'download_template', style: 'margin-right:20px;'} %>
+            <label style="vertical-align:middle;">
+            <span class="btn btn-info" style="width:110px; margin-right:20px;">
+              入出庫登録
+              <input type="file" name="materials_input_data" onChange="$('#materials_input_update').submit();" style="display:none;">
+            </span>
+            </label>
+          </div>
+        <% end %>
+
+
+        <%= form_tag('/material_stocks/edit', method:'post', multipart: true, id:'materials_stock_import') do %>
+          <div class="form-inline">
+            <%= link_to '棚卸テンプレ', {:controller => 'material_stocks', :action => 'inventory', :format => 'xlsx'}, {class: 'btn btn-secondary', id: 'download_template', style: 'margin-right:20px;'} %>
+            <label style="vertical-align:middle;">
+            <span class="btn btn-primary" style="width:110px;margin-right:20px;">
+              棚卸登録
+              <input type="file" name="materials_input_data" onChange="$('#materials_stock_import').submit();" style="display:none;">
+            </span>
+            </label>
+          </div>
+        <% end %>
+        </div>
+        <br>
+        <% if @target_code != nil then %>
+        <h5>表示素材： <%= truncate(@mat_name) %> <br> 素材在庫：現在庫総数 <%= @total_num %>,&nbsp; ケース総数 <%= @total_case %>,&nbsp; パッケージ総数 <%= @total_package %>,&nbsp; バラ総数 <%= @total_quantity %>,&nbsp; 入庫予定総数 <%= @arriving_total %>,&nbsp; 出庫予定総数 <%= @shipping_total %></h5>
+        <% else %>
+        <h5>表示素材： 全素材 &nbsp;&nbsp;&nbsp;素材在庫：-</h5>
+        <% end %>
+
+        <table class="table table-striped table-hover table-bordered" id="product_table" style="white-space:nowrap;">
+          <thead class="thead-light">
+            <tr>
+              <% @headers.each do |key, value| %>
+              <th style="text-align: center;"><%= value %></th>
+              <% end %>
+              <th style="text-align: center;">削除</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @materials.each do |temp| %>
+              <tr>
+                <% @headers.each do |key, value| %>
+                  <% if key == :name then %>
+                    <td><a href="/materials/edit/<%= temp.material_id %>" target="_blank"><%= truncate(temp.material.name) %></a></td>
+                  <% elsif key == :material_id then %>
+                    <td><a href="/material_stocks/edit/<%= temp.material_id %>"><%= temp.material_id %></a></td>
+                  <% else %>
+                    <td style="text-align: center;"><%= temp[key] %></td>
+                  <% end %>
+                <% end %>
+                <td><a href="/material_stocks/delete/<%= temp.id %>">データ削除</a></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#output_data1').on('click', function() {
+      setTimeout(function(){
+          location.href = '/material_stocks/edit';
+      },1000);
+    });
+  });
+</script>

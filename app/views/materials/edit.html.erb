@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="page-header" id="banner">
+    <div class="row my-4">
+      <div class="col-12">
+        <h3>素材データの管理</h3>
+        <div class="form-inline">
+        <%= form_tag('/materials/edit', method:'post', multipart: true, id:'materials_import') do %>
+          <div class="form-inline">
+            <%= link_to 'テンプレート取得', {:controller => 'materials', :action => 'template', :format => 'xlsx'}, {class: 'btn btn-success', id: 'download_template', style: 'margin-right: 20px;'} %>
+            <label style="vertical-align:middle;">
+            <span class="btn btn-info" style="width:120px;">
+              素材情報登録
+              <input type="file" name="material_data" onChange="$('#materials_import').submit();" style="display:none;">
+            </span>
+            </label>
+          </div>
+        <% end %>
+
+        <%= link_to 'データの出力', {:controller => 'materials', :action => 'output', :format => 'xlsx'}, {class: 'btn btn-warning', id: 'output_data', style: 'margin-left: 20px;'} %>
+
+        <%= form_tag('/materials/delete', method:'post', multipart: true, id:'materials_delete') do %>
+          <div class="form-inline">
+            <label style="vertical-align:middle;">
+            <span class="btn btn-danger" style="width:120px; margin-left: 20px;">
+              素材の削除
+              <input type="file" name="material_delete_data" onChange="$('#materials_delete').submit();" style="display:none;">
+            </span>
+            </label>
+          </div>
+        <% end %>
+        </div>
+        <br>
+        <h5>登録済み素材件数　全<%= @total.to_i %>件</h5>
+
+        <table class="table table-striped table-hover table-bordered">
+          <thead class="thead-light">
+            <tr>
+              <th>在庫</th>
+              <% @headers.each do |key, value| %>
+              <th><%= value %></th>
+              <% end %>
+              <th>登録日</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @materials.each do |temp| %>
+              <tr>
+                <td><a href="/material_stocks/edit/<%= temp.material_id %>" target="_blank">在庫</a></td>
+                <% @headers.each do |key, value| %>
+                <% if value == "カテゴリー" then %>
+                <td><%= temp.category.name %></td>
+                <% elsif value == "仕入れ先名" then %>
+                <td><%= temp.supplier.name %></td>
+                <% else %>
+                <td><%= temp[key] %></td>
+                <% end %>
+                <% end %>
+                <td><%= temp[:created_at] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#download_template').on('click', function() {
+      setTimeout(function(){
+          location.href = '/materials/edit';
+      },1000);
+    });
+  });
+</script>

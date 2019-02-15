@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="page-header" id="banner">
+    <div class="row my-4">
+      <div class="col-12">
+        <h3>データの削除</h3>
+        <div class="form-inline">
+          <%= form_tag('/products/destroy', method:'post') do %>
+            <div class="form-group">
+              <%= label_tag :current_password, "現在のパスワード" %>
+              <%= password_field_tag 'user[current_password]', '', :class => 'form-control', :style => 'margin-left: 20px;' %>
+            </div>
+            <br>
+            <div class="form-inline">
+              <%= submit_tag("商品マスタ削除", class:'btn btn-info', style: 'margin-right: 25px;') %>
+              <%= submit_tag("素材マスタ削除", class:'btn btn-success', style: 'margin-right: 25px;') %>
+              <%= submit_tag("商品在庫削除", class:'btn btn-info', style: 'margin-right: 25px;') %>
+              <%= submit_tag("素材在庫削除", class:'btn btn-success', style: 'margin-right: 25px;') %>
+              <%= submit_tag("店舗情報削除", class:'btn btn-info', style: 'margin-right: 25px;') %>
+              <%= submit_tag("仕入れ先情報削除", class:'btn btn-success', style: 'margin-right: 25px;') %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#download_template').on('click', function() {
+
+    });
+  });
+</script>
