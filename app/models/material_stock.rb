@@ -127,21 +127,24 @@ class MaterialStock < ApplicationRecord
       )
 
     elsif action == '出庫' then
-
       target = MaterialStock.find_or_create_by(user: user, material_id: material_id, expire: expire)
-
       if target != nil then
         before_case = target.current_case.to_i
         before_package = target.current_package.to_i
         before_qty = target.current_qty.to_i
         before_total = target.current_total.to_i
 
-        target.update(
-          current_case: before_case - input_case.to_i,
-          current_package: before_package - input_package.to_i,
-          current_qty: before_qty - input_qty.to_i,
-          current_total: before_total - input_total,
-        )
+        new_total = before_total - input_total
+        if new_total >= 0 then
+          res = MaterialStock.calc_ship(user, material_id, new_total)
+
+          target.update(
+            current_case: res[0],
+            current_package: res[1],
+            current_qty: res[2],
+            current_total: before_total - input_total,
+          )
+        end 
       end
 
       current_case = mstocks.sum(:current_case)

@@ -33,6 +33,75 @@ class ProductsController < ApplicationController
       sales: "売れ行き（14日間）",
       adv_cost: "広告費（14日間）"
     }
+
+    if request.post? then
+      data = params[:material_pick]
+      if data != nil then
+        ext = File.extname(data.path)
+        if ext == ".xlsx" then
+          workbook = RubyXL::Parser.parse(data.path)
+          worksheet = workbook.first
+          sheet_header = worksheet.sheet_data[0]
+          logger.debug("====== HEADER CHECK =========")
+          header_check = true
+
+          theader = {
+            material_id: "素材コード",
+            name: "素材名",
+            expire: "賞味期限",
+            required_qty: "必要総数量",
+            location_id: "ロケーション",
+            checked: "チェック"
+          }
+
+          theader.each_with_index do |head, index|
+            if sheet_header[index] != nil then
+              name = sheet_header[index].value
+              if theader.has_value?(name) == false then
+                header_check = false
+              end
+            else
+              header_check = false
+            end
+          end
+
+          if header_check == true then
+            logger.debug("====== HEADER OK =========")
+          else
+            logger.debug("====== HEADER NG =========")
+            return
+          end
+
+          worksheet.each_with_index do |row, index|
+            if index > 0 then
+              logger.debug("====== ROW " + index.to_s  + " =========")
+              buf = Array.new
+              for num in 0..5  do
+                if row[num] != nil then
+                  buf[num] = row[num].value
+                else
+                  buf[num] = nil
+                end
+              end
+              checked = buf[5]
+              if checked != "" then
+                logger.debug("--------------")
+                material_id = buf[0]
+                expire = buf[2]
+                req = buf[3].to_i
+                logger.debug(material_id)
+                logger.debug(expire)
+                logger.debug(req)
+                temp = MaterialStock.calc_ship(user, material_id, req)
+
+                action = "出庫"
+                MaterialStock.stock_update(user, material_id, action, expire, temp[0].to_i, temp[1].to_i, temp[2].to_i)
+              end
+            end
+          end
+        end
+      end
+    end
   end
 
   def edit
@@ -486,6 +555,188 @@ class ProductsController < ApplicationController
         timestamp = Time.new.strftime("%Y%m%d%H%M%S")
         data = @workbook.stream.read
         send_data data, filename: "素材数量確認用テンプレート_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
+      end
+    end
+  end
+
+  def pickup
+    user = current_user.email
+    if request.post? then
+      data = params[:product_ship_data]
+      if data != nil then
+        ext = File.extname(data.path)
+        if ext == ".xlsx" then
+          workbook = RubyXL::Parser.parse(data.path)
+          worksheet = workbook.first
+          sheet_header = worksheet.sheet_data[0]
+          logger.debug("====== HEADER CHECK =========")
+
+          headers = {
+            product_id: "商品コード",
+            name: "商品名",
+            check_quantity: "出庫予定数量"
+          }
+          inv_headers = headers.invert
+
+          header_check = true
+          headers.each_with_index do |head, index|
+            if sheet_header[index] != nil then
+              name = sheet_header[index].value
+              if headers.has_value?(name) == false then
+                header_check = false
+              end
+            else
+              header_check = false
+            end
+          end
+
+          if header_check == true then
+            logger.debug("====== HEADER OK! =========")
+          else
+            logger.debug("====== HEADER NG =========")
+            return
+          end
+
+          product_list = Array.new
+          worksheet.each_with_index do |row, index|
+            if index > 0 then
+              logger.debug("====== ROW " + index.to_s  + " =========")
+              input_row = Hash.new
+              headers.each_with_index do |head, col|
+                name = sheet_header[col].value
+                key = inv_headers[name]
+                if row[col] != nil then
+                  value = row[col].value
+                else
+                  value = nil
+                end
+                input_row[key] = value
+              end
+              if input_row[:check_quantity].to_i > 0 then
+                product_list << input_row
+              end
+            end
+          end
+
+          recipes = Recipe.where(user: user)
+          required_materials = Hash.new
+          db = Product.where(user: user)
+          @workbook = RubyXL::Workbook.new
+          @sheet = @workbook.first
+          @sheet.sheet_name = "まとめ"
+
+          product_list.each do |pitem|
+
+            product_id = pitem[:product_id]
+            pnum = pitem[:check_quantity].to_i
+            rp = recipes.where(product_id: product_id)
+
+            tsh = @workbook.add_worksheet(product_id)
+            tsh.add_cell(0, 0, "商品コード")
+            tsh.add_cell(0, 1, "商品名")
+            tsh.add_cell(1, 0, product_id)
+            tsh.add_cell(1, 1, db.find_by(product_id: product_id).name)
+
+            tsh.add_cell(3, 0, "素材コード")
+            tsh.add_cell(3, 1, "素材名")
+            tsh.add_cell(3, 2, "必要総数量")
+            trow = 0
+            rp.each do |mat|
+              tsh.add_cell(4 + trow, 0, mat.material_id)
+              tsh.add_cell(4 + trow, 1, mat.material.name)
+              tsh.add_cell(4 + trow, 2, mat.required_qty.to_i * pnum)
+              trow += 1
+              if required_materials.key?(mat.material_id) then
+                required_materials[mat.material_id] = required_materials[mat.material_id].to_i + mat.required_qty.to_i * pnum
+              else
+                required_materials[mat.material_id] = mat.required_qty.to_i * pnum
+              end
+            end
+          end
+
+
+          theader = {
+            material_id: "素材コード",
+            name: "素材名",
+            expire: "賞味期限",
+            required_qty: "必要総数量",
+            location_id: "ロケーション",
+            checked: "チェック"
+          }
+
+          theader.each_with_index do |(key, value), index|
+            @sheet.add_cell(0, index, value)
+          end
+
+          master = MaterialStock.where(user: user)
+          row = 0
+          required_materials.each_with_index do |(key, value), index|
+            ms = master.where(material_id: key).where.not(expire: nil).order("expire ASC")
+            req = value
+            ms.each do |temp|
+              if temp.current_total > 0 then
+                if req <= temp.current_total then
+                  input_total = req
+                  @sheet.add_cell(1 + row , 0, key)
+                  @sheet.add_cell(1 + row , 1, temp.material.name)
+                  @sheet.add_cell(1 + row , 2, temp.expire.strftime("%Y/%m/%d"))
+                  @sheet.add_cell(1 + row , 3, input_total)
+                  @sheet.add_cell(1 + row , 4, temp.material.location_id)
+                  @sheet.add_cell(1 + row , 5, nil)
+                  row += 1
+                  break
+                else
+                  input_total = temp.current_total
+                  req = req - temp.current_total
+                  @sheet.add_cell(1 + row , 0, key)
+                  @sheet.add_cell(1 + row , 1, temp.material.name)
+                  @sheet.add_cell(1 + row , 2, temp.expire.strftime("%Y/%m/%d"))
+                  @sheet.add_cell(1 + row , 3, input_total)
+                  @sheet.add_cell(1 + row , 4, temp.material.location_id)
+                  @sheet.add_cell(1 + row , 5, nil)
+                  row += 1
+                end
+              end
+            end
+          end
+          timestamp = Time.new.strftime("%Y%m%d%H%M%S")
+          data = @workbook.stream.read
+          send_data data, filename: "素材出庫確認用リスト_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
+
+        end
+      end
+    else
+      respond_to do |format|
+        format.html
+        format.xlsx do
+          @workbook = RubyXL::Workbook.new
+          @sheet = @workbook.first
+
+          headers = {
+            product_id: "商品コード",
+            name: "商品名",
+            check_quantity: "出庫予定数量"
+          }
+
+          headers.each_with_index do |(key, value), index|
+            @sheet.add_cell(0, index, value)
+          end
+
+          @products = Product.where(user: user)
+          recipes = Recipe.where(user: user)
+          row = 0
+          @products.each_with_index do |tproduct, index|
+            if recipes.where(product_id: tproduct.product_id).count > 0 then
+              @sheet.add_cell(1 + row, 0, tproduct.product_id)
+              @sheet.add_cell(1 + row, 1, tproduct.name)
+              @sheet.add_cell(1 + row, 2, 0)
+              row += 1
+            end
+          end
+          timestamp = Time.new.strftime("%Y%m%d%H%M%S")
+          data = @workbook.stream.read
+          send_data data, filename: "商品出庫予定確認用テンプレート_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
+        end
       end
     end
   end

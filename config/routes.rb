@@ -57,12 +57,14 @@ Rails.application.routes.draw do
   post 'sellers/delete'
 
   get 'products/show'
+  post 'products/show'
   get 'products/check'
   post 'products/check'
   get 'products/check_output'
   post 'products/check_output'
   get 'products/check_template'
   get 'products/pickup'
+  post 'products/pickup'
   post 'products/clear'
 
   get 'products/template'
