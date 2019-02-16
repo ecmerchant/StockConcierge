@@ -84,7 +84,7 @@ class ProductsController < ApplicationController
                 end
               end
               checked = buf[5]
-              if checked != "" then
+              if checked != "" && checked != nil then
                 logger.debug("--------------")
                 material_id = buf[0]
                 expire = buf[2]
@@ -577,6 +577,7 @@ class ProductsController < ApplicationController
             check_quantity: "出庫予定数量"
           }
           inv_headers = headers.invert
+          pstocks = ProductStock.where(user: user)
 
           header_check = true
           headers.each_with_index do |head, index|
@@ -613,6 +614,14 @@ class ProductsController < ApplicationController
                 input_row[key] = value
               end
               if input_row[:check_quantity].to_i > 0 then
+                tg = pstocks.where(product_id: input_row[:product_id]).order("created_at DESC").first
+                if tg != nil then
+                  new_s = tg.arriving_qty.to_i - input_row[:check_quantity].to_i
+                  if new_s < 0 then new_s = 0 end
+                  tg.update(
+                      arriving_qty: new_s
+                  )
+                end
                 product_list << input_row
               end
             end

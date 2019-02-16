@@ -23,8 +23,8 @@ class ProductStocksController < ApplicationController
 
     end
     if request.post? then
-      ProductStock.get_report(user)
-      #GetReportJob.perform_later(user)
+      #ProductStock.get_report(user)
+      GetReportJob.perform_later(user)
     end
 
   end
