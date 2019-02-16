@@ -541,14 +541,27 @@ class ProductsController < ApplicationController
           @sheet.add_cell(0, index, value)
         end
 
+        @sheet.add_cell(0, 3, "売れ行き(14日間)")
+
         @products = Product.where(user: user)
         recipes = Recipe.where(user: user)
         row = 0
+
+        @reports = Report.where(user: user)
+
         @products.each_with_index do |tproduct, index|
           if recipes.where(product_id: tproduct.product_id).count > 0 then
             @sheet.add_cell(1 + row, 0, tproduct.product_id)
             @sheet.add_cell(1 + row, 1, 0)
             @sheet.add_cell(1 + row, 2, tproduct.name)
+
+            ts = @reports.where(product_id: tproduct.product_id).order("recorded_at DESC NULLS LAST").first
+            if ts != nil then
+              ts = ts.recorded_at
+              buf = @reports.where(product_id: tproduct.product_id).where("recorded_at > ?", ts.ago(14.days))
+              @sheet.add_cell(1 + row, 3, buf.average(:order_quantity).round(0))
+            end
+
             row += 1
           end
         end
