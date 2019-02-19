@@ -31,7 +31,11 @@
 
         </div>
         <br>
+        <% if @product_id == nil then %>
         <h5>登録済み商品件数　全<%= @count.count.to_i %>件</h5>
+        <% else %>
+        <h5>表示中商品：<%= @title %></h5>
+        <% end %>
         <table class="table table-striped table-hover table-bordered ellipsis" id="product_table">
           <thead class="thead-light">
             <tr>

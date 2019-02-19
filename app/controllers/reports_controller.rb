@@ -15,6 +15,7 @@ class ReportsController < ApplicationController
     @product_id = params[:product_id]
     if @product_id != nil then
       @reports = Report.where(user: user, product_id: @product_id)
+      @title = Product.find_by(user: user, product_id: @product_id).name
     else
       @reports = Report.where(user: user)
     end
