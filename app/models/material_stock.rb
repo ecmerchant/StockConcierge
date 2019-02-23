@@ -144,7 +144,7 @@ class MaterialStock < ApplicationRecord
             current_qty: res[2],
             current_total: before_total - input_total,
           )
-        end 
+        end
       end
 
       current_case = mstocks.sum(:current_case)
@@ -213,7 +213,6 @@ class MaterialStock < ApplicationRecord
         input_case: input_case,
         input_package: input_package,
         input_qty: input_qty,
-        input_total: input_total,
         current_case: input_case.to_i,
         current_package: input_package.to_i,
         current_qty: input_qty.to_i,

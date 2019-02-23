@@ -80,26 +80,28 @@ class MaterialStocksController < ApplicationController
           worksheet.each_with_index do |row, index|
             if index > 0 then
               logger.debug("====== ROW " + index.to_s  + " =========")
-              input_row = Hash.new
-              headers.each_with_index do |head, col|
-                name = sheet_header[col].value
-                key = inv_headers[name]
-                if row[col] != nil then
-                  value = row[col].value
-                else
-                  value = nil
-                  if name == "登録パッケージ数" || name == "登録ケース数" || name == "登録バラ数" then
-                    value = 0
+              if row != nil then
+                input_row = Hash.new
+                headers.each_with_index do |head, col|
+                  name = sheet_header[col].value
+                  key = inv_headers[name]
+                  if row[col] != nil then
+                    value = row[col].value
+                  else
+                    value = nil
+                    if name == "登録パッケージ数" || name == "登録ケース数" || name == "登録バラ数" then
+                      value = 0
+                    end
+                  end
+                  if key != :name && key != :category_id then
+                    input_row[key] = value
                   end
                 end
-                if key != :name && key != :category_id then
-                  input_row[key] = value
+                input_row[:user] = user
+                if input_row[:material_id] != nil && input_row[:action] != nil then
+                  MaterialStock.stock_update(user, input_row[:material_id], input_row[:action], input_row[:expire], input_row[:input_case], input_row[:input_package], input_row[:input_qty])
                 end
-              end
-              input_row[:user] = user
-              if input_row[:material_id] != nil && input_row[:action] != nil then
-                MaterialStock.stock_update(user, input_row[:material_id], input_row[:action], input_row[:expire], input_row[:input_case], input_row[:input_package], input_row[:input_qty])
-              end
+              end 
               input_row = nil
             end
           end
