@@ -141,15 +141,24 @@ class ReportsController < ApplicationController
         @workbook = RubyXL::Workbook.new
         @sheet = @workbook.first
         user = current_user.email
-        headers = Constants::CONV_PRODUCT
+
+        headers = Constants::CONV_REPORT
+        inv_headers = headers.invert
+
+        @product_id = params[:product_id]
+        if @product_id != nil then
+          @reports = Report.where(user: user, product_id: @product_id)
+          @title = Product.find_by(user: user, product_id: @product_id).name
+        else
+          @reports = Report.where(user: user)
+        end
+
 
         headers.each_with_index do |(key, value), index|
           @sheet.add_cell(0, index, value)
         end
 
-        products = Product.where(user: user)
-
-        products.each_with_index do |product, row|
+        @reports.each_with_index do |product, row|
           headers.each_with_index do |(key, value), col|
             logger.debug(product[key])
             @sheet.add_cell(1 + row, col, product[key].to_s)
@@ -158,7 +167,7 @@ class ReportsController < ApplicationController
 
         data = @workbook.stream.read
         timestamp = Time.new.strftime("%Y%m%d%H%M%S")
-        send_data data, filename: "商品データ_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
+        send_data data, filename: "商品売れ行きデータ_" + @product_id + "_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
 
       end
     end

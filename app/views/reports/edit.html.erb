@@ -20,7 +20,7 @@
             </label>
           </div>
         <% end %>
-        <%= link_to 'データの出力', {:controller => 'reports', :action => 'output', :format => 'xlsx'}, {class: 'btn btn-warning', id: 'output_data', style: 'margin-left: 20px; margin-right: 20px;'} %>
+        <%= link_to 'データの出力', {:controller => 'reports', :action => 'output', :format => 'xlsx', product_id: @product_id}, {class: 'btn btn-warning', id: 'output_data', style: 'margin-left: 20px; margin-right: 20px;'} %>
         <%= form_tag('/reports/clear', method:'post', multipart: true, id:'product_delete') do %>
           <div class="form-inline">
             <label for="input1">削除対象日：</label>
