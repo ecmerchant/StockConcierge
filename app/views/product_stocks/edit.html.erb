@@ -8,17 +8,7 @@
             <% submit_tag '商品在庫取得', class: 'btn btn-info' %>
           <% end %>
 
-          <%= form_tag('/product_stocks/regist', method:'post', multipart: true, id:'ship_import') do %>
-            <div class="form-inline">
-              <%= link_to '出庫テンプレート', {:controller => 'product_stocks', :action => 'template', :format => 'xlsx'}, {class: 'btn btn-success', id: 'download_template', style: 'margin-left: 20px;'} %>
-              <label style="vertical-align:middle;">
-              <span class="btn btn-info" style="width:120px; margin-left:20px;">
-                出庫登録
-                <input type="file" name="product_ship" onChange="$('#ship_import').submit();" style="display:none;">
-              </span>
-              </label>
-            </div>
-          <% end %>
+
 
         </div>
         <br>

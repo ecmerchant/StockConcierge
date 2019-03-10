@@ -39,8 +39,8 @@ class ProductStocksController < ApplicationController
 
         headers = {
           product_id: "商品コード",
-          title: "商品名",
-          on_delivery_quantity: "出庫数"
+          name: "商品名",
+          input_qty: "入庫数"
         }
 
         inv_headers = headers.invert
@@ -51,25 +51,15 @@ class ProductStocksController < ApplicationController
           @sheet.add_cell(0, index, value)
         end
 
-        product_stocks.each_with_index do |stock, row|
-          if ProductStock.title == nil then
-            product_id = ProductStock.product_id
-            product = Product.find_by(user: user, product_id: product_id)
-            if product != nil then
-              title = product.title
-              ProductStock.update(
-                title: title
-              )
-            end
-          end
-          headers.each_with_index do |(key, value), col|
-            @sheet.add_cell(1 + row, col, stock[key])
-          end
+        Product.where(user: user).each_with_index do |stock, row|
+          @sheet.add_cell(1 + row, 0, stock.product_id)
+          @sheet.add_cell(1 + row, 1, stock.name)
+          @sheet.add_cell(1 + row, 2, 0)
         end
 
         data = @workbook.stream.read
         timestamp = Time.new.strftime("%Y%m%d%H%M%S")
-        send_data data, filename: "商品出庫テンプレート_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
+        send_data data, filename: "商品入庫テンプレート_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
       end
     end
   end
@@ -122,8 +112,8 @@ class ProductStocksController < ApplicationController
           header_check = true
           @headers = {
             product_id: "商品コード",
-            title: "商品名",
-            on_delivery_quantity: "出庫数"
+            name: "商品名",
+            input_qty: "入庫数"
           }
           @headers.each_with_index do |head, index|
             if sheet_header[index] != nil then
@@ -147,40 +137,79 @@ class ProductStocksController < ApplicationController
           user = current_user.email
           product_stocks = ProductStock.where(user: user)
           recipes = Recipe.where(user: user)
-          mproduct_stocks = MaterialProductStock.where(user: user)
+          mproduct_stocks = MaterialStock.where(user: user)
+
+          new_workbook = RubyXL::Workbook.new
+          new_worksheet = new_workbook.first
+          mheaders = Constants::CONV_MATERIAL
+          mheaders.each_with_index do |(key, value), index|
+            new_worksheet.add_cell(0, index, value)
+          end
+          mcounter = 0
 
           worksheet.each_with_index do |row, index|
             if index > 0 then
               logger.debug("====== ROW " + index.to_s  + " =========")
-              input_row = Hash.new
-              @headers.each_with_index do |head, col|
-                name = sheet_header[col].value
-                key = inv_headers[name]
-                if row[col] != nil then
-                  value = row[col].value
-                else
-                  value = nil
-                end
-                input_row[key] = value
+
+              product_id = row[0].value
+              if row[2] != nil then
+                quantity = row[2].value
+              else
+                quantity = 0
               end
-              product_id = input_row[:product_id]
-              quantity = input_row[:on_delivery_quantity]
               target = product_stocks.find_by(product_id: product_id)
               if target != nil then
-                current = target.on_delivery_quantity
+                current = target.arriving_qty
                 if (current - quantity) >= 0 then
                   target.update(
-                    on_delivery_quantity: (current - quantity)
+                    arriving_qty: (current - quantity)
                   )
                 end
               end
 
               if quantity > 0 then
-                MaterialProductStock.new.ship(user, product_id, quantity)
+                #素材の出庫登録
+                new_worksheet = new_workbook.add_worksheet('product_id')
+                trecipe = recipes.where(product_id: product_id)
+                trecipe.each do |tp|
+                  material_id = tp.material_id
+                  required_qty = tp.required_qty * quantity
+                  tmat = MaterialStock.where(user: user, material_id: material_id).where.not(expire: nil).order("expire ASC NULLS LAST")
+
+                  tmat.each do |tt|
+                    if tt.current_total >= required_qty then
+                      data = MaterialStock.calc_ship(user, material_id, required_qty)
+                      mcounter += 1
+                      new_worksheet.add_cell(mcounter, 0, material_id)
+                      new_worksheet.add_cell(mcounter, 1, tp.material.name)
+                      new_worksheet.add_cell(mcounter, 2, tp.material.category.name)
+                      new_worksheet.add_cell(mcounter, 3, "出庫")
+                      new_worksheet.add_cell(mcounter, 4, tt.expire.strftime("%Y/%M/%D"))
+                      new_worksheet.add_cell(mcounter, 5, data[0])
+                      new_worksheet.add_cell(mcounter, 6, data[1])
+                      new_worksheet.add_cell(mcounter, 7, data[2])
+                      break
+                    else
+                      data = MaterialStock.calc_ship(user, material_id, required_qty)
+                      mcounter += 1
+                      new_worksheet.add_cell(mcounter, 0, material_id)
+                      new_worksheet.add_cell(mcounter, 1, tp.material.name)
+                      new_worksheet.add_cell(mcounter, 2, tp.material.category.name)
+                      new_worksheet.add_cell(mcounter, 3, "出庫")
+                      new_worksheet.add_cell(mcounter, 4, tt.expire.strftime("%Y/%M/%D"))
+                      new_worksheet.add_cell(mcounter, 5, tt.current_case)
+                      new_worksheet.add_cell(mcounter, 6, tt.current_package)
+                      new_worksheet.add_cell(mcounter, 7, tt.current_qty)
+                    end
+                  end
+                end
               end
-              input_row = nil
             end
           end
+
+          data = new_workbook.stream.read
+          timestamp = Time.new.strftime("%Y%m%d%H%M")
+          send_data data, filename: "素材出庫確認用データ_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
 
         end
       end
