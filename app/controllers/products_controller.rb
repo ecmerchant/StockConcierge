@@ -587,7 +587,7 @@ class ProductsController < ApplicationController
           headers = {
             product_id: "商品コード",
             name: "商品名",
-            check_quantity: "出庫予定数量"
+            check_quantity: "入庫予定数量"
           }
           inv_headers = headers.invert
           pstocks = ProductStock.where(user: user)
@@ -737,7 +737,7 @@ class ProductsController < ApplicationController
           headers = {
             product_id: "商品コード",
             name: "商品名",
-            check_quantity: "出庫予定数量"
+            check_quantity: "入庫予定数量"
           }
 
           headers.each_with_index do |(key, value), index|
@@ -757,7 +757,7 @@ class ProductsController < ApplicationController
           end
           timestamp = Time.new.strftime("%Y%m%d%H%M%S")
           data = @workbook.stream.read
-          send_data data, filename: "商品出庫予定確認用テンプレート_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
+          send_data data, filename: "商品入庫予定確認用テンプレート_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
         end
       end
     end

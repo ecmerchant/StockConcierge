@@ -6,10 +6,10 @@
         <div class="form-inline">
         <%= form_tag('/products/pickup', method:'post', multipart: true, id:'product_ship_import') do %>
           <div class="form-inline">
-            <%= link_to '出庫予定テンプレ取得', {:controller => 'products', :action => 'pickup', :format => 'xlsx'}, {class: 'btn btn-success', id: 'download_template', style: 'margin-right: 20px;'} %>
+            <%= link_to '商品入庫予定テンプレDL', {:controller => 'products', :action => 'pickup', :format => 'xlsx'}, {class: 'btn btn-success', id: 'download_template', style: 'margin-right: 20px;'} %>
             <label style="vertical-align:middle;">
-            <span class="btn btn-info" style="width:190px;">
-              出庫予定テンプレ入力
+            <span class="btn btn-info" style="width:220px;">
+              商品入庫予定テンプレ入力
               <input type="file" name="product_ship_data" onChange="$('#product_ship_import').submit();" style="display:none;">
             </span>
             </label>
@@ -18,8 +18,8 @@
         <%= form_tag('/products/show', method:'post', multipart: true, id:'pick_list_import') do %>
           <div class="form-inline">
             <label style="vertical-align:middle;">
-            <span class="btn btn-danger" style="width:140px; margin-left:20px;">
-              出庫登録
+            <span class="btn btn-danger" style="width:280px; margin-left:20px;">
+              素材出庫登録（商品入庫に伴う）
               <input type="file" name="material_pick" onChange="$('#pick_list_import').submit();" style="display:none;">
             </span>
             </label>
