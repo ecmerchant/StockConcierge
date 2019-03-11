@@ -213,18 +213,18 @@ class MaterialStock < ApplicationRecord
         input_case: input_case,
         input_package: input_package,
         input_qty: input_qty,
-        current_case: input_case.to_i,
-        current_package: input_package.to_i,
-        current_qty: input_qty.to_i,
+        current_case: input_case,
+        current_package: input_package,
+        current_qty: input_qty,
         current_total: input_total,
-        arriving_case: nil,
-        arriving_package: nil,
-        arriving_qty: nil,
-        arriving_total: nil,
-        shipping_case: nil,
-        shipping_package: nil,
-        shipping_qty: nil,
-        shipping_total: nil
+        arriving_case: before_arriving_case,
+        arriving_package: before_arriving_package,
+        arriving_qty: before_arriving_qty,
+        arriving_total: before_arriving_total,
+        shipping_case: before_shipping_case,
+        shipping_package: before_shipping_package,
+        shipping_qty: before_shipping_qty,
+        shipping_total: before_shipping_total
       )
 
       current_case = mstocks.sum(:current_case)

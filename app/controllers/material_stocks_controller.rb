@@ -101,7 +101,7 @@ class MaterialStocksController < ApplicationController
                 if input_row[:material_id] != nil && input_row[:action] != nil then
                   MaterialStock.stock_update(user, input_row[:material_id], input_row[:action], input_row[:expire], input_row[:input_case], input_row[:input_package], input_row[:input_qty])
                 end
-              end 
+              end
               input_row = nil
             end
           end
