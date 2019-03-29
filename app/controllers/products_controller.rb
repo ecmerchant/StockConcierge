@@ -385,8 +385,11 @@ class ProductsController < ApplicationController
                   expires = Array.new
                   recipe.each do |buf|
                     temp_hash[buf.material_id] = buf.required_qty * input_row[:check_quantity]
-                    expire = MaterialStock.where(user: user, material_id: buf.material_id).order("expire ASC NULLS LAST").first.expire
-                    expires.push(expire)
+                    expire = MaterialStock.where(user: user, material_id: buf.material_id).order("expire ASC NULLS LAST").first
+                    if expire != nil then
+                      expire = expire.expire
+                      expires.push(expire)
+                    end
                   end
                   if index == 1 then
                     @required_materials = temp_hash

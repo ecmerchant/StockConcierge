@@ -18,16 +18,21 @@ class MaterialStocksController < ApplicationController
       temp = MaterialStock.where(user: user, material_id: @target_code).where.not(expire: nil).where("current_total > 0")
       @materials = temp.order("expire ASC NULLS LAST")
       @material = @materials.first
-      @mat_name = @material.material.name
+      if @material != nil then
+        @mat_name = @material.material.name
 
-      @total_num = temp.sum(:current_total)
-      @total_case = temp.sum(:current_case)
-      @total_package = temp.sum(:current_package)
-      @total_quantity = temp.sum(:current_qty)
+        @total_num = temp.sum(:current_total)
+        @total_case = temp.sum(:current_case)
+        @total_package = temp.sum(:current_package)
+        @total_quantity = temp.sum(:current_qty)
 
-      tt = MaterialStock.where(user: user, material_id: @target_code, expire: nil).order("created_at DESC NULLS LAST").first
-      @arriving_total = tt.arriving_total
-      @shipping_total = tt.shipping_total
+        tt = MaterialStock.where(user: user, material_id: @target_code, expire: nil).order("created_at DESC NULLS LAST").first
+        @arriving_total = tt.arriving_total
+        @shipping_total = tt.shipping_total
+      else
+        @mat_name = Material.find_by(user: user, material_id: @target_code).name
+      end
+
     else
       @headers = Constants::CONV_MSTOCK
       inv_headers = @headers.invert
