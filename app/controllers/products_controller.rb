@@ -387,7 +387,9 @@ class ProductsController < ApplicationController
                     tp = MaterialStock.where(user: user, material_id: buf.material_id).order("expire ASC NULLS LAST").first
                     if tp != nil then
                       expire = tp.expire
-                      expires.push(expire)
+                      if tp.expire != nil then
+                        expires.push(expire)
+                      end
                     end
                   end
                   if index == 1 then
