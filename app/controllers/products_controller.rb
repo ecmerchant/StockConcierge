@@ -379,15 +379,14 @@ class ProductsController < ApplicationController
 
               if input_row[:product_id] != nil then
                 if input_row[:check_quantity] > 0 then
-
                   recipe = @recipes.where(product_id: input_row[:product_id])
                   temp_hash = Hash.new
                   expires = Array.new
                   recipe.each do |buf|
                     temp_hash[buf.material_id] = buf.required_qty * input_row[:check_quantity]
-                    expire = MaterialStock.where(user: user, material_id: buf.material_id).order("expire ASC NULLS LAST").first
-                    if expire != nil then
-                      expire = expire.expire
+                    tp = MaterialStock.where(user: user, material_id: buf.material_id).order("expire ASC NULLS LAST").first
+                    if tp != nil then
+                      expire = tp.expire
                       expires.push(expire)
                     end
                   end
@@ -396,8 +395,11 @@ class ProductsController < ApplicationController
                   else
                     @required_materials = @required_materials.merge(temp_hash){|key, v1, v2| v1 + v2}
                   end
-                  input_row[:min_expire] = expires.min
-                  @calc_products << input_row
+                  if expires != nil then
+                    input_row[:min_expire] = expires.min
+                    @calc_products << input_row
+                  end
+
                 end
               end
               input_row = nil
