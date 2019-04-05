@@ -148,7 +148,7 @@ class RecipesController < ApplicationController
         if product_id != nil then
           recipe = Recipe.where(user: user, product_id: product_id)
           title = Product.find_by(user: user, product_id: product_id)
-          if title != nil then title = title.name end 
+          if title != nil then title = title.name end
           logger.debug("----------------")
           logger.debug(title)
         end

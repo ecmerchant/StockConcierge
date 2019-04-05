@@ -61,7 +61,14 @@ class SuppliersController < ApplicationController
               input_row[:user] = user
               #suppliers << Supplier.new(input_row)
               if input_row[:supplier_id] != nil then
-                Supplier.find_or_create_by(input_row)
+                temp = Supplier.find_by(user: user, supplier_id: input_row[:supplier_id])
+                if temp != nil then
+                  temp.update(
+                    input_row
+                  )
+                else
+                  Supplier.create(input_row)
+                end
               end
               input_row = nil
             end

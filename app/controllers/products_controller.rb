@@ -162,7 +162,14 @@ class ProductsController < ApplicationController
               input_row[:user] = user
 
               if input_row[:product_id] != nil then
-                Product.find_or_create_by(input_row)
+                temp = Product.find_by(user: user, product_id: input_row[:product_id])
+                if temp != nil then
+                  temp.update(
+                    input_row
+                  )
+                else
+                  Product.create(input_row)
+                end
               end
               input_row = nil
             end

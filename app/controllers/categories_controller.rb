@@ -62,7 +62,16 @@ class CategoriesController < ApplicationController
                 input_row[key] = value
               end
               input_row[:user] = user
-              Category.find_or_create_by(input_row)
+              if input_row[:category_id] != nil then
+                temp = Category.find_by(user: user, category_id:input_row[:category_id])
+                if temp != nil then
+                  temp.update(
+                    input_row
+                  )
+                else
+                  Category.create(input_row)
+                end
+              end
               input_row = nil
             end
           end

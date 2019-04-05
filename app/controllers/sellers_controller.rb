@@ -59,7 +59,14 @@ class SellersController < ApplicationController
               end
               input_row[:user] = user
               if input_row[:seller_id] != nil then
-                Seller.find_or_create_by(input_row)
+                temp = Seller.find_by(user: user, seller_id: input_row[:seller_id])
+                if temp != nil then
+                  temp.update(
+                    input_row
+                  )
+                else
+                  Seller.create(input_row)
+                end
               end
               input_row = nil
             end
