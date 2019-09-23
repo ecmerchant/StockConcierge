@@ -573,7 +573,7 @@ class ProductsController < ApplicationController
             if ts != nil then
               ts = ts.recorded_at
               buf = @reports.where(product_id: tproduct.product_id).where("recorded_at > ?", ts.ago(14.days))
-              @sheet.add_cell(1 + row, 3, buf.average(:order_quantity).round(0))
+              @sheet.add_cell(1 + row, 3, buf.average(:order_quantity).to_f.round(0))
             end
 
             row += 1
