@@ -27,7 +27,7 @@
               <% if target.first != nil then %>
               <% tg = target.first.material %>
               <tr>
-                <td style="text-align: center;"><%= temp %></td>
+                <td style="text-align: center;"><%= link_to temp, 'materials/edit/' + temp.to_s, target: '_blank' %></td>
                 <td style="text-align: center;"><%= tg.name %></td>
                 <td style="text-align: center;"><%= target.sum(:current_case) %></td>
                 <td style="text-align: center;"><%= target.sum(:current_package) %></td>

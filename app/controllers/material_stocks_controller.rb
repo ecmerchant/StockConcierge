@@ -36,8 +36,6 @@ class MaterialStocksController < ApplicationController
       current_total: "現在庫（総数）"
     }
 
-
-
   end
 
   def edit
