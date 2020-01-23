@@ -15,6 +15,7 @@
           <tbody>
             <% @material_ids.each do |temp| %>
               <% target = @material_stocks.where(material_id: temp) %>
+              <% if target.first != nil then %>
               <% tg = target.first.material %>
               <tr>
                 <td style="text-align: center;"><%= temp %></td>
@@ -24,6 +25,7 @@
                 <td style="text-align: center;"><%= target.sum(:current_qty) %></td>
                 <td style="text-align: center;"><%= target.sum(:current_total) %></td>
               </tr>
+              <% end %>
             <% end %>
           </tbody>
         </table>
