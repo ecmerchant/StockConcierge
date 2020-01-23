@@ -8,6 +8,24 @@ class MaterialStocksController < ApplicationController
     redirect_to root_url, :alert => exception.message
   end
 
+  def show
+    @login_user = current_user
+    user = current_user.email
+    @material_ids = MaterialStock.where(user: user).group(:material_id).pluck(:material_id)
+    @material_stocks = MaterialStock.where(user: user).where.not(expire: nil).where("current_total > 0")
+    @headers = {
+      material_id: "素材コード",
+      name: "素材名",
+      current_case: "現在庫（ケース）",
+      current_package: "現在庫（パッケージ）",
+      current_qty: "現在庫（バラ）",
+      current_total: "現在庫（総数）"
+    }
+
+
+
+  end
+
   def edit
     @login_user = current_user
     user = current_user.email

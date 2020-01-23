@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="page-header" id="banner">
+    <div class="row my-4">
+      <div class="col-12">
+        <h3>素材在庫の一覧</h3>
+
+        <table class="table table-striped table-hover table-bordered" id="product_table" style="white-space:nowrap;">
+          <thead class="thead-light">
+            <tr>
+              <% @headers.each do |key, value| %>
+              <th style="text-align: center;"><%= value %></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% @material_ids.each do |temp| %>
+              <% target = @material_stocks.where(material_id: temp) %>
+              <% tg = target.first.material %>
+              <tr>
+                <td style="text-align: center;"><%= temp %></td>
+                <td style="text-align: center;"><%= tg.name %></td>
+                <td style="text-align: center;"><%= target.sum(:current_case) %></td>
+                <td style="text-align: center;"><%= target.sum(:current_package) %></td>
+                <td style="text-align: center;"><%= target.sum(:current_qty) %></td>
+                <td style="text-align: center;"><%= target.sum(:current_total) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>

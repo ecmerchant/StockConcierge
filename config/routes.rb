@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   get 'suppliers/output'
   post 'suppliers/delete'
 
+
   get 'materials/edit'
   get 'materials/edit/:material_id', to: 'materials#edit'
   post 'materials/edit'
@@ -36,6 +37,7 @@ Rails.application.routes.draw do
   get 'materials/output'
   post 'materials/delete'
 
+  get 'material_stocks/show'
   get 'material_stocks/edit'
   get 'material_stocks/edit/:material_id', to: 'material_stocks#edit'
   post 'material_stocks/edit'
