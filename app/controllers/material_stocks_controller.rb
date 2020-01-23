@@ -11,7 +11,21 @@ class MaterialStocksController < ApplicationController
   def show
     @login_user = current_user
     user = current_user.email
-    @material_ids = MaterialStock.where(user: user).group(:material_id).pluck(:material_id)
+    @material_name = params[:material_name]
+    @material_code = params[:material_code]
+
+    tag = MaterialStock.where(user: user)
+    @material_ids = tag.group(:material_id).pluck(:material_id)
+
+    if @material_name != nil then
+      tag = Material.where(user: user).where("name LIKE ?", "%" + @material_name.to_s + "%")
+      @material_ids = tag.group(:material_id).pluck(:material_id)
+    end
+    if @material_code != nil then
+      tag = tag.where("material_id LIKE ?", "%" + @material_code.to_s + "%")
+      @material_ids = tag.group(:material_id).pluck(:material_id)
+    end
+
     @material_stocks = MaterialStock.where(user: user).where.not(expire: nil).where("current_total > 0")
     @headers = {
       material_id: "素材コード",
