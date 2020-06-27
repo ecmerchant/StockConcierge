@@ -22,7 +22,11 @@ class MaterialStock < ApplicationRecord
     lot = temp.package_per_case * temp.qty_per_package
     order_num = qty.fdiv(lot).ceil
     total = order_num * lot
-    supplier = temp.supplier.name
+    if temp.supplier != nil then
+      supplier = temp.supplier.name
+    else 
+      supplier = ""
+    end 
     return [order_num, total, supplier]
   end
 
