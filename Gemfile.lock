@@ -149,7 +149,7 @@ GEM
     marcel (1.0.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.6.1)
+    mini_portile2 (2.8.0)
     minitest (5.15.0)
     mono_logger (1.1.1)
     msgpack (1.5.2)
@@ -159,8 +159,8 @@ GEM
       ruby2_keywords (~> 0.0.1)
     nested_form (0.3.2)
     nio4r (2.5.8)
-    nokogiri (1.12.5)
-      mini_portile2 (~> 2.6.1)
+    nokogiri (1.13.6)
+      mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     peddler (2.4.5)
@@ -330,7 +330,7 @@ DEPENDENCIES
   kaminari
   kaminari-bootstrap
   listen (>= 3.0.5, < 3.2)
-  nokogiri
+  nokogiri (>= 1.13.6)
   peddler
   pg (= 0.21.0)
   puma (~> 3.11)
@@ -351,7 +351,7 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 RUBY VERSION
-   ruby 2.5.3p105
+   ruby 2.6.3p62
 
 BUNDLED WITH
    1.17.3
