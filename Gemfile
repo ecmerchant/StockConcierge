@@ -10,7 +10,7 @@ gem 'rails', '~> 5.2.5'
 gem 'pg', '0.21.0'
 
 # Use Puma as the app server
-gem 'puma', '~> 3.11'
+gem 'puma', '>= 4.3.12'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -72,7 +72,7 @@ gem 'cancancan'
 gem 'rails_admin'
 
 # gem for Bootstrap
-gem 'bootstrap', '~> 4.1.1'
+gem 'bootstrap', '~> 4.3.1'
 gem 'jquery-rails'
 gem 'rails_12factor'
 gem 'jquery-turbolinks'

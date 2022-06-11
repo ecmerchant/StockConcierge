@@ -59,10 +59,10 @@ GEM
     bindex (0.8.1)
     bootsnap (1.12.0)
       msgpack (~> 1.2)
-    bootstrap (4.1.3)
-      autoprefixer-rails (>= 6.0.3)
-      popper_js (>= 1.12.9, < 2)
-      sass (>= 3.5.2)
+    bootstrap (4.3.1)
+      autoprefixer-rails (>= 9.1.0)
+      popper_js (>= 1.14.3, < 2)
+      sassc-rails (>= 2.0.0)
     builder (3.2.4)
     byebug (11.1.3)
     cancancan (3.3.0)
@@ -170,7 +170,8 @@ GEM
     pg (0.21.0)
     popper_js (1.16.0)
     public_suffix (4.0.7)
-    puma (3.12.6)
+    puma (5.6.4)
+      nio4r (~> 2.0)
     puma_worker_killer (0.3.1)
       get_process_mem (~> 0.2)
       puma (>= 2.7)
@@ -316,7 +317,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import
   bootsnap (>= 1.1.0)
-  bootstrap (~> 4.1.1)
+  bootstrap (~> 4.3.1)
   byebug
   cancancan
   capybara (>= 2.15)
@@ -333,7 +334,7 @@ DEPENDENCIES
   nokogiri (>= 1.13.6)
   peddler
   pg (= 0.21.0)
-  puma (~> 3.11)
+  puma (>= 4.3.12)
   puma_worker_killer
   rails (~> 5.2.5)
   rails_12factor
