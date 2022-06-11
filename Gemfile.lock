@@ -170,7 +170,8 @@ GEM
     pg (0.21.0)
     popper_js (1.16.0)
     public_suffix (4.0.7)
-    puma (3.12.6)
+    puma (4.3.12)
+      nio4r (~> 2.0)
     puma_worker_killer (0.3.1)
       get_process_mem (~> 0.2)
       puma (>= 2.7)
@@ -333,7 +334,7 @@ DEPENDENCIES
   nokogiri (>= 1.13.6)
   peddler
   pg (= 0.21.0)
-  puma (~> 3.11)
+  puma (~> 4.3)
   puma_worker_killer
   rails (~> 5.2.5)
   rails_12factor
