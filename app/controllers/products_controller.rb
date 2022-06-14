@@ -31,7 +31,8 @@ class ProductsController < ApplicationController
       cost: "原価",
       profit: "見込み利益",
       sales: "売れ行き（14日間）",
-      adv_cost: "広告費（14日間）"
+      adv_cost: "広告費（14日間）",
+      rakuten_url: "楽天URL"
     }
 
     if request.post? then
@@ -40,7 +41,7 @@ class ProductsController < ApplicationController
         ext = File.extname(data.path)
         if ext == ".xlsx" then
           workbook = RubyXL::Parser.parse(data.path)
-          worksheet = workbook.first
+          worksheet = workbook.worksheets[0]
           sheet_header = worksheet.sheet_data[0]
           logger.debug("====== HEADER CHECK =========")
           header_check = true
@@ -111,6 +112,7 @@ class ProductsController < ApplicationController
     @materials = Material.where(user: user)
     @recipes = Recipe.where(user: user)
     @headers = Constants::CONV_PRODUCT
+
     inv_headers = @headers.invert
     if request.post? then
       data = params[:product_data]
@@ -118,7 +120,8 @@ class ProductsController < ApplicationController
         ext = File.extname(data.path)
         if ext == ".xlsx" then
           workbook = RubyXL::Parser.parse(data.path)
-          worksheet = workbook.first
+          #worksheet = workbook.first
+          worksheet = workbook.worksheets[0]
           sheet_header = worksheet.sheet_data[0]
           logger.debug("====== HEADER CHECK =========")
           header_check = true
@@ -192,7 +195,7 @@ class ProductsController < ApplicationController
         ext = File.extname(data.path)
         if ext == ".xlsx" then
           workbook = RubyXL::Parser.parse(data.path)
-          worksheet = workbook.first
+          worksheet = workbook.worksheets[0]
           sheet_header = worksheet.sheet_data[0]
           logger.debug("====== HEADER CHECK =========")
           header_check = true
@@ -239,7 +242,7 @@ class ProductsController < ApplicationController
       format.html
       format.xlsx do
         @workbook = RubyXL::Workbook.new
-        @sheet = @workbook.first
+        @sheet = @workbook.worksheets[0]
 
         headers = Constants::CONV_PRODUCT
 
@@ -269,7 +272,7 @@ class ProductsController < ApplicationController
       format.html
       format.xlsx do
         @workbook = RubyXL::Workbook.new
-        @sheet = @workbook.first
+        @sheet = @workbook.worksheets[0]
         user = current_user.email
         headers = Constants::CONV_PRODUCT
 
@@ -333,7 +336,7 @@ class ProductsController < ApplicationController
         ext = File.extname(data.path)
         if ext == ".xlsx" then
           workbook = RubyXL::Parser.parse(data.path)
-          worksheet = workbook.first
+          worksheet = workbook.worksheets[0]
           sheet_header = worksheet.sheet_data[0]
           logger.debug("====== HEADER CHECK =========")
           logger.debug(sheet_header)
@@ -463,7 +466,7 @@ class ProductsController < ApplicationController
   def check_output
     if request.post? then
       @workbook = RubyXL::Workbook.new
-      @sheet = @workbook.first
+      @sheet = @workbook.worksheets[0]
       user = current_user.email
       tag = JSON.parse(params[:data])
       tp = JSON.parse(params[:data_product])
@@ -543,7 +546,7 @@ class ProductsController < ApplicationController
       format.html
       format.xlsx do
         @workbook = RubyXL::Workbook.new
-        @sheet = @workbook.first
+        @sheet = @workbook.worksheets[0]
 
         headers = {
           product_id: "商品コード",
@@ -594,7 +597,7 @@ class ProductsController < ApplicationController
         ext = File.extname(data.path)
         if ext == ".xlsx" then
           workbook = RubyXL::Parser.parse(data.path)
-          worksheet = workbook.first
+          worksheet = workbook.worksheets[0]
           sheet_header = worksheet.sheet_data[0]
           logger.debug("====== HEADER CHECK =========")
 
@@ -658,7 +661,7 @@ class ProductsController < ApplicationController
           required_materials = Hash.new
           db = Product.where(user: user)
           @workbook = RubyXL::Workbook.new
-          @sheet = @workbook.first
+          @sheet = @workbook.worksheets[0]
           @sheet.sheet_name = "まとめ"
 
           product_list.each do |pitem|
@@ -746,7 +749,7 @@ class ProductsController < ApplicationController
         format.html
         format.xlsx do
           @workbook = RubyXL::Workbook.new
-          @sheet = @workbook.first
+          @sheet = @workbook.worksheets[0]
 
           headers = {
             product_id: "商品コード",

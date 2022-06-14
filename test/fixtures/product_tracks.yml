@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  product: one
+  price: 1
+  availability: MyString
+  review_count: 1
+  review_average: 1.5
+
+two:
+  product: two
+  price: 1
+  availability: MyString
+  review_count: 1
+  review_average: 1.5

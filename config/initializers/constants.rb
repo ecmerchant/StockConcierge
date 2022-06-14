@@ -10,7 +10,8 @@ module Constants
     cost: "原価",
     expense: "経費",
     profit: "利益額",
-    seller_id: "店舗"
+    seller_id: "店舗",
+    rekuten_url: "楽天URL"
   }
 
   CONV_MATERIAL = {

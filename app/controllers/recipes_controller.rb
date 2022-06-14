@@ -42,7 +42,7 @@ class RecipesController < ApplicationController
         ext = File.extname(data.path)
         if ext == ".xlsx" then
           workbook = RubyXL::Parser.parse(data.path)
-          worksheet = workbook.first
+          worksheet = workbook.worksheets[0]
           sheet_header = worksheet.sheet_data[0]
           logger.debug("====== HEADER CHECK =========")
           product_id = worksheet[1][0].value
@@ -92,7 +92,7 @@ class RecipesController < ApplicationController
         ext = File.extname(data.path)
         if ext == ".xlsx" then
           workbook = RubyXL::Parser.parse(data.path)
-          worksheet = workbook.first
+          worksheet = workbook.worksheets[0]
           sheet_header = worksheet.sheet_data[0]
           logger.debug("====== HEADER CHECK =========")
           header_check = true
@@ -138,7 +138,7 @@ class RecipesController < ApplicationController
       format.html
       format.xlsx do
         @workbook = RubyXL::Workbook.new
-        @sheet = @workbook.first
+        @sheet = @workbook.worksheets[0]
         user = current_user.email
         headers = Constants::CONV_RECIPE
 
@@ -215,7 +215,7 @@ class RecipesController < ApplicationController
       format.html
       format.xlsx do
         @workbook = RubyXL::Workbook.new
-        @sheet = @workbook.first
+        @sheet = @workbook.worksheets[0]
         user = current_user.email
         headers = Constants::CONV_RECIPE
 
@@ -233,7 +233,7 @@ class RecipesController < ApplicationController
 
         data = @workbook.stream.read
         timestamp = Time.new.strftime("%Y%m%d%H%M%S")
-        send_data data, filename: "レシピ舗情報_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
+        send_data data, filename: "レシピ情報_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
 
       end
     end

@@ -34,7 +34,7 @@ class ProductStocksController < ApplicationController
       format.html
       format.xlsx do
         @workbook = RubyXL::Workbook.new
-        @sheet = @workbook.first
+        @sheet = @workbook.worksheets[0]
         user = current_user.email
 
         headers = {
@@ -69,7 +69,7 @@ class ProductStocksController < ApplicationController
       format.html
       format.xlsx do
         @workbook = RubyXL::Workbook.new
-        @sheet = @workbook.first
+        @sheet = @workbook.worksheets[0]
         user = current_user.email
         headers = Constants::CONV_MSTOCK
 
@@ -106,7 +106,7 @@ class ProductStocksController < ApplicationController
         ext = File.extname(data.path)
         if ext == ".xlsx" then
           workbook = RubyXL::Parser.parse(data.path)
-          worksheet = workbook.first
+          worksheet = workbook.worksheets[0]
           sheet_header = worksheet.sheet_data[0]
           logger.debug("====== HEADER CHECK =========")
           header_check = true
@@ -140,7 +140,7 @@ class ProductStocksController < ApplicationController
           mproduct_stocks = MaterialStock.where(user: user)
 
           new_workbook = RubyXL::Workbook.new
-          new_worksheet = new_workbook.first
+          new_worksheet = new_workbook.worksheets[0]
           mheaders = Constants::CONV_MATERIAL
           mheaders.each_with_index do |(key, value), index|
             new_worksheet.add_cell(0, index, value)

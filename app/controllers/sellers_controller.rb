@@ -19,7 +19,7 @@ class SellersController < ApplicationController
         ext = File.extname(data.path)
         if ext == ".xlsx" then
           workbook = RubyXL::Parser.parse(data.path)
-          worksheet = workbook.first
+          worksheet = workbook.worksheets[0]
           sheet_header = worksheet.sheet_data[0]
           logger.debug("====== HEADER CHECK =========")
           header_check = true
@@ -92,7 +92,7 @@ class SellersController < ApplicationController
         ext = File.extname(data.path)
         if ext == ".xlsx" then
           workbook = RubyXL::Parser.parse(data.path)
-          worksheet = workbook.first
+          worksheet = workbook.worksheets[0]
           sheet_header = worksheet.sheet_data[0]
           logger.debug("====== HEADER CHECK =========")
           header_check = true
@@ -138,7 +138,7 @@ class SellersController < ApplicationController
       format.html
       format.xlsx do
         @workbook = RubyXL::Workbook.new
-        @sheet = @workbook.first
+        @sheet = @workbook.worksheets[0]
 
         headers = Constants::CONV_SELLER
 
@@ -158,7 +158,7 @@ class SellersController < ApplicationController
       format.html
       format.xlsx do
         @workbook = RubyXL::Workbook.new
-        @sheet = @workbook.first
+        @sheet = @workbook.worksheets[0]
         user = current_user.email
         headers = Constants::CONV_SELLER
 

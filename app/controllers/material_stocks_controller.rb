@@ -75,7 +75,7 @@ class MaterialStocksController < ApplicationController
         ext = File.extname(data.path)
         if ext == ".xlsx" then
           workbook = RubyXL::Parser.parse(data.path)
-          worksheet = workbook.first
+          worksheet = workbook.worksheets[0]
           sheet_header = worksheet.sheet_data[0]
           logger.debug("====== HEADER CHECK =========")
           header_check = true
@@ -151,7 +151,7 @@ class MaterialStocksController < ApplicationController
       format.html
       format.xlsx do
         @workbook = RubyXL::Workbook.new
-        @sheet = @workbook.first
+        @sheet = @workbook.worksheets[0]
 
         headers = {
           material_id: "素材コード",
@@ -194,7 +194,7 @@ class MaterialStocksController < ApplicationController
       format.html
       format.xlsx do
         @workbook = RubyXL::Workbook.new
-        @sheet = @workbook.first
+        @sheet = @workbook.worksheets[0]
         user = current_user.email
         material_stocks = MaterialStock.where(user: user)
         materials = Material.where(user: user)

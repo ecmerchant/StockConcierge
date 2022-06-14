@@ -95,3 +95,5 @@ gem 'rubyXL'
 # gem for pagination
 gem 'kaminari'
 gem 'kaminari-bootstrap'
+
+gem 'typhoeus'

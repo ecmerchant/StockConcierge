@@ -59,6 +59,7 @@
               <% buf = @reports.where(product_id: product_id).where("recorded_at > ?", ts.ago(14.days)) %>
               <td><%= if buf.average(:order_quantity) != nil then buf.average(:order_quantity).round(0) else 0 end %></td>
               <td><%= if buf.average(:cost) != nil then buf.average(:cost).round(0) else 0 end %></td>
+              <td><%= temp.rakuten_url %></td>
             </tr>
             <% end %>
           </tbody>
