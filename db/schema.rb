@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_12_061013) do
+ActiveRecord::Schema.define(version: 2022_06_15_113546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,14 +86,14 @@ ActiveRecord::Schema.define(version: 2022_06_12_061013) do
   end
 
   create_table "product_tracks", force: :cascade do |t|
-    t.bigint "product_id"
+    t.string "rakuten_item_code"
     t.integer "price"
     t.string "availability"
     t.integer "review_count"
     t.float "review_average"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_product_tracks_on_product_id"
+    t.index ["rakuten_item_code"], name: "index_product_tracks_on_rakuten_item_code"
   end
 
   create_table "products", force: :cascade do |t|
@@ -158,6 +158,7 @@ ActiveRecord::Schema.define(version: 2022_06_12_061013) do
     t.string "mws_auth_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "rakuten_seller_id"
   end
 
   create_table "suppliers", force: :cascade do |t|
@@ -187,5 +188,4 @@ ActiveRecord::Schema.define(version: 2022_06_12_061013) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "product_tracks", "products"
 end

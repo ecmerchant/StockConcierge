@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-12">
+      <h3>販売状況の確認</h3>
+    </div>
+    <div class="col-12">
+      <div class="name">
+        <span class="label">商品名： </span><span class="content"><%= @product.name %></span>
+      </div>
+      <div class="price">
+        <span class="label">販売価格： </span><span class="content"><%= @product.price.to_i %>円</span>
+      </div>
+      <div class="url">
+        <span class="label">URL： </span><span class="content"><%= link_to @product.rakuten_url, @product.rakuten_url, target: "_blank" %></span>
+      </div>
+      <div class="calc">
+        <span class="label">直近30日間の販売可能日数： </span><span class="content"><%= @product.calc_salable_days %>日</span>
+      </div>
+    </div>
+  </div>
+  <div class="row my-3">
+    <div class="col">
+      <canvas id="track_chart" width="100vw;" height="50vh;"></canvas>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/locale/ja.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+<script>
+  const ctx = document.getElementById('track_chart').getContext('2d');
+  const myChart = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      //labels: <%= @label.to_json.html_safe %>,
+      datasets: [{
+        label: '販売状況推移',
+        data: <%= @sdata.to_json.html_safe %>,
+        backgroundColor: 'rgb(55, 55, 232)',
+        borderColor: 'rgb(55, 55, 232)',
+        showLine: true,
+      }],
+    },
+    options: {
+      scales: {
+        x: {
+          type: 'time',
+          time: {
+            unit: 'day'
+          },
+          min: "<%= @sdate %>",
+          max: "<%= @edate %>",
+        },
+        y: {
+          type: 'linear',
+          beginAtZero: true,
+          min: 0,
+          max: 1.2
+        }
+      }
+    }
+});
+</script>

@@ -11,7 +11,7 @@ module Constants
     expense: "経費",
     profit: "利益額",
     seller_id: "店舗",
-    rekuten_url: "楽天URL"
+    rakuten_url: "楽天URL"
   }
 
   CONV_MATERIAL = {
@@ -80,8 +80,9 @@ module Constants
   CONV_SELLER = {
     name: "店舗名",
     seller_id: "セラーID",
-    aws_access_key_id: "AWSアクセスキー",
-    secret_key_id: "秘密キー"
+    rakuten_seller_id: "楽天ストアID"
+    #aws_access_key_id: "AWSアクセスキー",
+    #secret_key_id: "秘密キー"
   }
 
   CONV_SUPPLIER = {

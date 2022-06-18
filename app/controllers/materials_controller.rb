@@ -18,6 +18,7 @@ class MaterialsController < ApplicationController
     else
       @materials = Material.where(user: user, material_id: @material_id).order('name COLLATE "C" ASC')
     end
+    @materials = @materials.includes(:category, :supplier)
     @headers = Constants::CONV_MATERIAL
     inv_headers = @headers.invert
     if request.post? then

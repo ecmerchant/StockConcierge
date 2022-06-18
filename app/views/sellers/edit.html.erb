@@ -32,11 +32,11 @@
         <br>
         <h5>登録済み販売店舗件数　全<%= @sellers.count.to_i %>件</h5>
 
-        <table class="table table-striped table-hover table-bordered" style="width:60%;">
+        <table class="table table-striped table-hover table-bordered" style="width:80%; height: 65vh;">
           <thead class="thead-light">
             <tr>
               <% @headers.each do |key, value| %>
-              <th><%= value %></th>
+              <th style="width: 250px;"><%= value %></th>
               <% end %>
             </tr>
           </thead>

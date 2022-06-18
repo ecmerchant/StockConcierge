@@ -1,4 +1,3 @@
-
 require 'resque/server'
 
 Rails.application.routes.draw do
@@ -68,6 +67,8 @@ Rails.application.routes.draw do
   get 'products/pickup'
   post 'products/pickup'
   post 'products/clear'
+
+  get 'products/track/:id', to: 'products#track'
 
   get 'products/template'
   get 'products/output'

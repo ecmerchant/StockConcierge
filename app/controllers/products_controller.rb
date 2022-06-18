@@ -10,18 +10,38 @@ class ProductsController < ApplicationController
     redirect_to root_url, :alert => exception.message
   end
 
+  def track
+    @login_user = current_user
+    @product = Product.find(params[:id])
+    @product_tracks = @product.product_tracks.order(created_at: :desc)
+    buf = @product_tracks.pluck(:created_at, :availability)
+
+    @sdata = []
+    buf.each do |row|
+      @sdata.push({
+        x: row[0].strftime("%F %T"),
+        y: row[1].to_i
+      })
+    end
+    now = Time.zone.now
+    @sdate = (now.ago(30.days).strftime("%F"))
+    @edate= (now.strftime("%F"))
+  end
+
   def show
     @login_user = current_user
     user = current_user.email
-    @products = Product.where(user: user)
-    @stocks = ProductStock.where(user: user)
-    @materials = Material.where(user: user)
-    @recipes = Recipe.where(user: user)
-    @reports = Report.where(user: user)
+    @products = current_user.products.includes(:product_stocks, :reports, :recipes).references(:product_stocks, :reports, :recipes)
+    #@stocks = current_user.product_stocks
+    #@materials = current_user.materials
+    #@recipes = current_user.recipes
+    #@reports = current_user.reports
     @headers = {
       asin: "商品コード",
       title: "商品名",
       recipe: "レシピ",
+      track_30days: "直近30日間の販売可能日数",
+      track: "販売状況詳細",
       stock: "在庫状況",
       report: "売れ行き",
       fba_quantity: "FBA在庫",
@@ -108,9 +128,9 @@ class ProductsController < ApplicationController
   def edit
     @login_user = current_user
     user = current_user.email
-    @products = Product.where(user: user)
-    @materials = Material.where(user: user)
-    @recipes = Recipe.where(user: user)
+    @products = current_user.products.includes(:seller)
+    @materials = current_user.materials
+    @recipes = current_user.recipes
     @headers = Constants::CONV_PRODUCT
 
     inv_headers = @headers.invert
