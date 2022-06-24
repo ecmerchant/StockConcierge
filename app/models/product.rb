@@ -92,9 +92,22 @@ class Product < ApplicationRecord
 
             rakuten_hash[rakuten_url] = rakuten_item_code
 
+            logger.debug("check 1")
+
+            if rakuten_url.end_with?("/") then
+              rakuten_url2 = rakuten_url.chop
+            end
+
             if rakuten_urls_without_item_code.present? then
-              if rakuten_urls_without_item_code.include?(rakuten_url) then
-                product = products.find_by(rakuten_url: rakuten_url)
+              logger.debug("check 2")
+              if rakuten_urls_without_item_code.include?(rakuten_url) || rakuten_urls_without_item_code.include?(rakuten_url2) then
+                logger.debug("check 3")
+                if rakuten_urls_without_item_code.include?(rakuten_url) then
+                  product = products.find_by(rakuten_url: rakuten_url)
+                elsif rakuten_urls_without_item_code.include?(rakuten_url2) then
+                  product = products.find_by(rakuten_url: rakuten_url2)
+                end
+                #product = products.find_by(rakuten_url: rakuten_url)
                 product.update(
                   rakuten_item_code: rakuten_item_code
                 )
@@ -103,7 +116,9 @@ class Product < ApplicationRecord
             end
 
             if rakuten_item_codes.include?(rakuten_item_code) then
+              logger.debug("check 4")
               if check_hash.has_key?(rakuten_item_code) == false then
+                logger.debug("check 5")
                 ProductTrack.create(
                   rakuten_item_code: rakuten_item_code,
                   availability: availability,
@@ -114,7 +129,7 @@ class Product < ApplicationRecord
                 check_hash[rakuten_item_code] = rakuten_item_code
               end
             end
-
+            logger.debug("check 6")
           end
 
           if page >= page_count then
