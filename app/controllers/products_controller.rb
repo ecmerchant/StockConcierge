@@ -31,7 +31,7 @@ class ProductsController < ApplicationController
   def show
     @login_user = current_user
     user = current_user.email
-    @products = current_user.products.includes(:product_stocks, :reports, :recipes).references(:product_stocks, :reports, :recipes)
+    @products = current_user.products.includes(:latest_stock, :reports, :recipes, :product_tracks).references(:latest_stock, :reports, :recipes, :product_tracks)
     #@stocks = current_user.product_stocks
     #@materials = current_user.materials
     #@recipes = current_user.recipes
@@ -50,8 +50,8 @@ class ProductsController < ApplicationController
       price: "販売価格",
       cost: "原価",
       profit: "見込み利益",
-      sales: "売れ行き（14日間）",
-      adv_cost: "広告費（14日間）",
+      #sales: "売れ行き（14日間）",
+      #adv_cost: "広告費（14日間）",
       rakuten_url: "楽天URL"
     }
 

@@ -3,6 +3,8 @@ class ProductStock < ApplicationRecord
 
   #FBA在庫数の確認
 
+  scope :latest_stock, -> { order("created_at DESC NULLS LAST").first } 
+
   def self.get_report(user)
     marketplace_id = "A1VC38T7YXB528"
     sellers = Seller.where(user: user)

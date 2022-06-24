@@ -4,6 +4,7 @@ class Product < ApplicationRecord
   has_many :reports, primary_key: :product_id, foreign_key: :product_id
   has_many :recipes, primary_key: :product_id, foreign_key: :product_id
   has_many :product_stocks, primary_key: :product_id, foreign_key: :product_id, dependent: :destroy
+  has_one :latest_stock, -> {latest_stock}, primary_key: :product_id, foreign_key: :product_id, dependent: :destroy, class_name: 'ProductStock'
 
   require 'typhoeus'
   require 'nokogiri'
