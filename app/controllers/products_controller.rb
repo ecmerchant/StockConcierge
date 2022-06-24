@@ -31,7 +31,7 @@ class ProductsController < ApplicationController
   def show
     @login_user = current_user
     user = current_user.email
-    @products = current_user.products.includes(:latest_stock, :reports, :recipes, :product_tracks).references(:latest_stock, :reports, :recipes, :product_tracks)
+    @products = current_user.products.includes(:product_stocks, :recipes, :product_tracks).references(:product_stocks, :recipes, :product_tracks)
     #@stocks = current_user.product_stocks
     #@materials = current_user.materials
     #@recipes = current_user.recipes
