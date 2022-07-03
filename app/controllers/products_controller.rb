@@ -31,7 +31,8 @@ class ProductsController < ApplicationController
   def show
     @login_user = current_user
     user = current_user.email
-    @products = current_user.products.includes(:product_stocks, :recipes, :product_tracks).references(:product_stocks, :recipes, :product_tracks)
+    @products = current_user.products.includes(:product_stocks, :recent_stock, :recipes, :product_tracks).references(:product_stocks, :recent_stock, :recipes, :product_tracks)
+    #@products = current_user.products.includes(:product_stocks, :recent_stocks, :recipes, :product_tracks).references(:product_stocks, :recent_stocks, :recipes, :product_tracks)
     #@stocks = current_user.product_stocks
     #@materials = current_user.materials
     #@recipes = current_user.recipes
@@ -123,6 +124,59 @@ class ProductsController < ApplicationController
         end
       end
     end
+
+    respond_to do |format|
+      format.html
+      format.xlsx do
+        @workbook = RubyXL::Workbook.new
+        @sheet = @workbook.worksheets[0]
+
+        @headers2 = {
+          asin: "商品コード",
+          title: "商品名",
+          track_30days: "直近30日間の販売可能日数",
+          fba_quantity: "FBA在庫",
+          self_quantity: "自社在庫",
+          on_delivery_quantity: "入荷予定在庫",
+          price: "販売価格",
+          profit: "見込み利益",
+          rakuten_url: "楽天URL",
+          rakuten_item_code: "楽天ID",
+        }
+
+        @headers2.each_with_index do |(key, value), index|
+          @sheet.add_cell(0, index, value)
+        end
+
+        row = 0
+        @products.each_with_index do |temp, index|
+          product_id = temp.product_id
+
+          @sheet.add_cell(1 + row, 0, temp.product_id)
+          @sheet.add_cell(1 + row, 1, temp.name)
+          @sheet.add_cell(1 + row, 2, temp.calc_salable_days)
+          buf = temp.recent_stock
+          if buf != nil then
+            @sheet.add_cell(1 + row, 3, buf.fba_qty.to_i)
+            @sheet.add_cell(1 + row, 4, buf.self_qty.to_i)
+            @sheet.add_cell(1 + row, 5, buf.arriving_qty.to_i)            
+          else 
+            @sheet.add_cell(1 + row, 3, 0)
+            @sheet.add_cell(1 + row, 4, 0)
+            @sheet.add_cell(1 + row, 5, 0)   
+          end
+          @sheet.add_cell(1 + row, 6, temp.price)
+          @sheet.add_cell(1 + row, 7, temp.profit)
+          @sheet.add_cell(1 + row, 8, temp.rakuten_url)
+          @sheet.add_cell(1 + row, 9, temp.rakuten_item_code)
+          row += 1
+        end
+        timestamp = Time.new.strftime("%Y%m%d%H%M%S")
+        data = @workbook.stream.read
+        send_data data, filename: "商品データ_" + timestamp + ".xlsx", type: "application/xlsx", disposition: "attachment"
+      end  
+    end
+
   end
 
   def edit
