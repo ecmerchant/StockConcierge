@@ -31,8 +31,9 @@ class ProductsController < ApplicationController
   def show
     @login_user = current_user
     user = current_user.email
-    @products = current_user.products.includes(:product_stocks, :recent_stock, :recipes, :product_tracks).references(:product_stocks, :recent_stock, :recipes, :product_tracks)
-    #@products = current_user.products.includes(:product_stocks, :recent_stocks, :recipes, :product_tracks).references(:product_stocks, :recent_stocks, :recipes, :product_tracks)
+    @user = user
+    #@products = current_user.products.includes(:product_stocks, recent_stock:{user: @user}, :recipes, :product_tracks).references(:product_stocks,  recent_stock:{user: @user}, :recipes, :product_tracks)
+    @products = current_user.products.includes(:product_stocks, :recipes, :product_tracks).references(:product_stocks, :recipes, :product_tracks)
     #@stocks = current_user.product_stocks
     #@materials = current_user.materials
     #@recipes = current_user.recipes
@@ -155,7 +156,7 @@ class ProductsController < ApplicationController
           @sheet.add_cell(1 + row, 0, temp.product_id)
           @sheet.add_cell(1 + row, 1, temp.name)
           @sheet.add_cell(1 + row, 2, temp.calc_salable_days)
-          buf = temp.recent_stock
+          buf = temp.product_stocks.order("created_at DESC NULLS LAST").first
           if buf != nil then
             @sheet.add_cell(1 + row, 3, buf.fba_qty.to_i)
             @sheet.add_cell(1 + row, 4, buf.self_qty.to_i)
