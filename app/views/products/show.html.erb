@@ -53,8 +53,6 @@
               <td><%= if buf != nil then buf.self_qty.to_i else 0 end %></td>
               <td><%= if buf != nil then buf.arriving_qty.to_i else 0 end %></td>
               <td><%= temp.price %></td>
-              <% buf = temp.recipes %>
-              <% cost = 0 %>
               <td><%= temp.cost %></td>
               <td><%= temp.profit %></td>
               <td><%= temp.rakuten_url %></td>
