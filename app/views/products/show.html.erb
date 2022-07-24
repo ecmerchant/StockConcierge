@@ -48,7 +48,7 @@
               <td><a href="/products/track/<%= temp.id %>" target="_blank">詳細ページ</a></td>
               <td><a href="/product_stocks/edit/<%= temp.product_id %>" target="_blank">在庫</a></td>
               <td><a href="/reports/edit/<%= temp.product_id %>" target="_blank">売れ行き</a></td>
-              <% buf = temp.product_stocks.order("created_at DESC NULLS LAST").first %>
+              <% buf = nil %>
               <td><%= if buf != nil then buf.fba_qty.to_i else 0 end %></td>
               <td><%= if buf != nil then buf.self_qty.to_i else 0 end %></td>
               <td><%= if buf != nil then buf.arriving_qty.to_i else 0 end %></td>
