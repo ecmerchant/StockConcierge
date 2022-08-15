@@ -28,15 +28,17 @@ class ProductsController < ApplicationController
     @edate= (now.strftime("%F"))
   end
 
+
   def show
     @login_user = current_user
     user = current_user.email
     @user = user
     #@products = current_user.products.includes(:product_stocks, recent_stock:{user: @user}, :recipes, :product_tracks).references(:product_stocks,  recent_stock:{user: @user}, :recipes, :product_tracks)
-
     #@products = current_user.products.includes(:product_tracks).references(:product_tracks)
-    @products = current_user.products.eager_load(:product_tracks).order("product_tracks.created_at ASC")
-    
+
+    @products = current_user.products.includes(:product_tracks).references(:product_tracks)
+    @num =  current_user.products.pluck(:id).length
+    @products = @products.page(params[:page]).per(100)
     #@products = current_user.products.includes(:product_stocks, :recipes, :product_tracks).references(:product_stocks, :recipes, :product_tracks)
     #@stocks = current_user.product_stocks
     #@materials = current_user.materials
