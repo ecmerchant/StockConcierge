@@ -13,7 +13,8 @@ class Product < ApplicationRecord
   require 'net/http'
 
   def calc_salable_days
-    data = product_tracks.order(created_at: :asc).pluck(:created_at, :availability)
+    #data = product_tracks.order(created_at: :asc).pluck(:created_at, :availability)
+    data = product_tracks.pluck(:created_at, :availability)
     s = 0
     if data.length > 1 then
       (0..(data.length - 2)).each do |index|

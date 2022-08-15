@@ -33,7 +33,10 @@ class ProductsController < ApplicationController
     user = current_user.email
     @user = user
     #@products = current_user.products.includes(:product_stocks, recent_stock:{user: @user}, :recipes, :product_tracks).references(:product_stocks,  recent_stock:{user: @user}, :recipes, :product_tracks)
-    @products = current_user.products.includes(:product_tracks).references(:product_tracks)
+
+    #@products = current_user.products.includes(:product_tracks).references(:product_tracks)
+    @products = current_user.products.eager_load(:product_tracks).order("product_tracks.created_at ASC")
+    
     #@products = current_user.products.includes(:product_stocks, :recipes, :product_tracks).references(:product_stocks, :recipes, :product_tracks)
     #@stocks = current_user.product_stocks
     #@materials = current_user.materials
@@ -151,6 +154,7 @@ class ProductsController < ApplicationController
         end
 
         row = 0
+        @products = @products.includes(:product_stocks).references(:product_stocks)
         @products.each_with_index do |temp, index|
           product_id = temp.product_id
 
