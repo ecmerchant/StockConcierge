@@ -305,7 +305,8 @@ class ProductsController < ApplicationController
               logger.debug("====== ROW " + index.to_s  + " =========")
               if row[0] != nil then
                 asin = row[0].value
-                tag = @products.find_by(asin: asin)
+                logger.debug(asin)
+                tag = @products.find_by(product_id: asin)
                 if tag != nil then
                   tag.delete
                 end
