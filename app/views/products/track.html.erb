@@ -14,7 +14,7 @@
         <span class="label">URL： </span><span class="content"><%= link_to @product.rakuten_url, @product.rakuten_url, target: "_blank" %></span>
       </div>
       <div class="calc">
-        <span class="label">直近30日間の販売可能日数： </span><span class="content"><%= @product.calc_salable_days %>日</span>
+        <span class="label">直近30日間の販売可能日数： </span><span class="content"><%= @product.salable_days %>日</span>
       </div>
     </div>
   </div>

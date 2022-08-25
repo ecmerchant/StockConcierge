@@ -130,6 +130,14 @@ class Product < ApplicationRecord
                   review_average: review_average
                 )
                 check_hash[rakuten_item_code] = rakuten_item_code
+
+                product = Product.find_by(rakuten_item_code: rakuten_item_code)
+                if product.present? then
+                  salable_days = product.calc_salable_days
+                  product.update(
+                    salable_days: salable_days
+                  )
+                end
               end
             end
             logger.debug("check 6")

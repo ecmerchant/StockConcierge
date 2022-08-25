@@ -33,17 +33,16 @@ class ProductsController < ApplicationController
     @login_user = current_user
     user = current_user.email
     @user = user
-    #@products = current_user.products.includes(:product_stocks, recent_stock:{user: @user}, :recipes, :product_tracks).references(:product_stocks,  recent_stock:{user: @user}, :recipes, :product_tracks)
-    #@products = current_user.products.includes(:product_tracks).references(:product_tracks)
 
-    @products = current_user.products.includes(:product_tracks).references(:product_tracks)
+    @products = current_user.products
     @num =  current_user.products.pluck(:id).length
     @products = @products.page(params[:page]).per(100)
-    #@products = current_user.products.includes(:product_stocks, :recipes, :product_tracks).references(:product_stocks, :recipes, :product_tracks)
+    
     #@stocks = current_user.product_stocks
     #@materials = current_user.materials
     #@recipes = current_user.recipes
     #@reports = current_user.reports
+    
     @headers = {
       asin: "商品コード",
       title: "商品名",
@@ -162,7 +161,7 @@ class ProductsController < ApplicationController
 
           @sheet.add_cell(1 + row, 0, temp.product_id)
           @sheet.add_cell(1 + row, 1, temp.name)
-          @sheet.add_cell(1 + row, 2, temp.calc_salable_days)
+          @sheet.add_cell(1 + row, 2, temp.salable_days)
           buf = temp.product_stocks.order("created_at DESC NULLS LAST").first
           if buf != nil then
             @sheet.add_cell(1 + row, 3, buf.fba_qty.to_i)

@@ -45,7 +45,7 @@
               <td><%= product_id %></td>
               <td><%= truncate(temp.name) %></td>
               <td><a href="/recipes/edit/<%= product_id %>" target="_blank">レシピ</a></td>
-              <td class="text-center"><%= temp.calc_salable_days %></td>
+              <td class="text-center"><%= temp.salable_days %></td>
               <td><a href="/products/track/<%= temp.id %>" target="_blank">詳細ページ</a></td>
               <td><a href="/product_stocks/edit/<%= product_id %>" target="_blank">在庫</a></td>
               <td><a href="/reports/edit/<%= product_id %>" target="_blank">売れ行き</a></td>
