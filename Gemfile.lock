@@ -221,7 +221,7 @@ GEM
       excon (>= 0.50.0)
       jeff (~> 2.0)
       multi_xml (>= 0.5.0)
-    pg (0.21.0)
+    pg (1.5.8)
     popper_js (1.16.1)
     public_suffix (6.0.1)
     puma (6.4.3)
@@ -413,7 +413,7 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   nokogiri (>= 1.13.6)
   peddler
-  pg (= 0.21.0)
+  pg (~> 1.1)
   puma (>= 4.3.12)
   puma_worker_killer
   rails (~> 6.1.7)
