@@ -13,11 +13,17 @@ class MaterialsController < ApplicationController
     user = current_user.email
     @material_id = params[:material_id]
     @total = Material.where(user: user).count
-    if @material_id == nil then
-      @materials = Material.where(user: user).order('name COLLATE "C" ASC')
+    if @material_id.nil?
+      @materials = Material.where(user: user).order(Arel.sql('name COLLATE "C" ASC'))
     else
-      @materials = Material.where(user: user, material_id: @material_id).order('name COLLATE "C" ASC')
+      @materials = Material.where(user: user, material_id: @material_id).order(Arel.sql('name COLLATE "C" ASC'))
     end
+    
+    #if @material_id == nil then
+      #@materials = Material.where(user: user).order('name COLLATE "C" ASC')
+    #else
+     # @materials = Material.where(user: user, material_id: @material_id).order('name COLLATE "C" ASC')
+    #end
     @materials = @materials.includes(:category, :supplier)
     @headers = Constants::CONV_MATERIAL
     inv_headers = @headers.invert
